@@ -1,10 +1,14 @@
-name: integration_tests
-title: InSpec Profile
-maintainer: The Authors
-copyright: The Authors
-copyright_email: you@example.com
+name: integration-tests
+title: Azure InSpec Profile
+maintainer: Adeel Ahmad
+copyright: Adeel Ahmad
+copyright_email: adeel@hashicorp.com
 license: Apache-2.0
-summary: An InSpec Compliance Profile
+summary: An InSpec Compliance Profile For Azure
 version: 0.1.0
+inspec_version: '>= 2.2.7'
+depends:
+- name: inspec-azure
+  git: https://github.com/inspec/inspec-azure.git
 supports:
-  platform: os
+- platform: azure
