@@ -1,8 +1,8 @@
 locals {
   application_name = "terraform-modules-development-azure"
   env              = "dev"
-  service          = "web"
-  resource_group   = "DefaultResourceGroup-WEU"
+  service          = "adeel"
+  resource_group   = "dcanadillas-images"
 }
 
 module "default" {
@@ -12,24 +12,28 @@ module "default" {
   tenant_id       = var.tenant_id
 }
 
+data "vault_auth_backend" "default" {
+  path = "approle"
+}
+
 module "vault_approle" {
-  source           = "git::https://github.com/devops-adeel/terraform-vault-approle.git?ref=v0.4.2"
+  source           = "git::https://github.com/devops-adeel/terraform-vault-approle.git?ref=v0.5.0"
   application_name = local.application_name
   env              = local.env
   service          = local.service
+  mount_accessor   = data.vault_auth_backend.default.accessor
 }
 
-/* resource "vault_azure_secret_backend_role" "default" { */
-/*   backend = module.default.backend_path */
-/*   role    = format("%s-%s", local.env, local.service) */
-/*   ttl     = 300 */
-/*   max_ttl = 600 */
-
-/*   azure_roles { */
-/*     role_name = "Contributor" */
-/*     scope     = "/subscriptions/${var.subscription_id}/resourceGroups/${local.resource_group}" */
-/*   } */
-/* } */
+resource "vault_azure_secret_backend_role" "default" {
+  backend = module.default.backend_path
+  role    = format("%s-%s", local.env, local.service)
+  ttl     = 300
+  max_ttl = 600
+  azure_roles {
+    role_name = "Contributor"
+    scope     = "/subscriptions/${var.subscription_id}/resourceGroups/${local.resource_group}"
+  }
+}
 
 /* data "vault_azure_access_credentials" "default" { */
 /*   backend        = module.default.backend_path */
