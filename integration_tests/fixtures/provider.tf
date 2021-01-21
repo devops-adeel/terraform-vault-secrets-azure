@@ -13,8 +13,8 @@ terraform {
   }
 }
 
-variable "approle_id" {}
-variable "approle_secret" {}
+variable approle_id {}
+variable approle_secret {}
 
 provider "vault" {
   auth_login {
