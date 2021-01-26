@@ -18,8 +18,8 @@ variable approle_secret {}
 
 provider "vault" {
   auth_login {
+    namespace = admin/terraform-vault-secrets-azure
     path = "auth/approle/login"
-    namespace = "admin/terraform-vault-secrets-azure"
 
     parameters = {
       role_id   = var.approle_id
